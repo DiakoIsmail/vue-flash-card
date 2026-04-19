@@ -3,6 +3,7 @@
   "homepage": "https://diakoismail.github.io/vue-flash-card/",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
