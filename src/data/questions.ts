@@ -1,67 +1,538 @@
 import type { Category } from '../types'
 
 export const categories: Category[] = [
+  // ─── JAVA BASICS ──────────────────────────────────────────────────────────
   {
-    id: 'java-grunder',
-    title: 'Java – Grunder och avancerat',
+    id: 'java-basics',
+    title: 'Java – Basics',
     color: '#1e40af',
     icon: '☕',
     questions: [
       {
-        id: 1,
-        question: 'Vad är skillnaden mellan en abstrakt klass och ett interface i Java?',
-        answer: 'En abstrakt klass kan ha tillstånd (fält), konstruktorer och konkreta metoder, medan ett interface (sedan Java 8) kan ha default- och statiska metoder men inget tillstånd. En klass kan bara ärva från en abstrakt klass men implementera flera interfaces.\n\nAnvänd abstrakt klass när klasser delar implementering; interface när du vill definiera ett kontrakt.',
-        tip: 'Nämn ett exempel från ett projekt där du valde det ena framför det andra och varför.',
+        id: 101,
+        question: 'What is Java and what makes it platform-independent?',
+        answer: 'Java is a compiled, object-oriented language. Source code (.java) is compiled by javac into bytecode (.class). The JVM (Java Virtual Machine) interprets and executes that bytecode on any OS.\n\n"Write once, run anywhere" — the JVM is the portability layer. Each OS has its own JVM implementation (HotSpot, OpenJ9, etc.) but all understand the same bytecode format.',
+        tip: 'Know the difference: JDK (compiler + JRE), JRE (JVM + standard library), JVM (execution engine).',
       },
       {
-        id: 2,
-        question: 'Förklara skillnaden mellan HashMap och ConcurrentHashMap.',
-        answer: 'HashMap är inte trådsäker – om flera trådar skriver samtidigt kan det orsaka race conditions. ConcurrentHashMap använder segment-locking (Java 7) eller CAS-operationer (Java 8+) för att möjliggöra parallell läsning och skrivning utan att låsa hela kartan.\n\nLämplig i flertrådade miljöer som en mikroserviceapplikation.',
-        tip: 'Systemet hanterar höga volymer – trådsäkerhet är relevant att lyfta.',
+        id: 102,
+        question: 'What are the eight primitive types in Java?',
+        answer: 'byte (8-bit), short (16-bit), int (32-bit), long (64-bit), float (32-bit IEEE 754), double (64-bit IEEE 754), char (16-bit Unicode), boolean (true/false).\n\nPrimitives are stored on the stack (or inline in an object on the heap). They have no methods and cannot be null. Each has a corresponding wrapper class: Integer, Double, Boolean, etc.',
       },
       {
-        id: 3,
-        question: 'Vad är Java Streams och ge ett exempel på användning?',
-        answer: 'Streams (Java 8+) erbjuder ett funktionellt sätt att bearbeta kollektioner med operationer som filter(), map(), reduce() och collect().\n\nExempel:\nlist.stream().filter(e -> e.isActive()).map(Employee::getName).collect(Collectors.toList())\n\nLazy evaluation gör det effektivt; parallelStream() möjliggör parallell bearbetning.',
-        tip: 'Visa att du kan skriva ren, modern Java-kod.',
+        id: 103,
+        question: 'What is the difference between == and .equals()?',
+        answer: '== compares references (memory addresses) for objects, or values for primitives.\n.equals() compares logical equality — what the object considers "equal."\n\nString s1 = new String("hi");\nString s2 = new String("hi");\ns1 == s2     // false — different objects\ns1.equals(s2) // true — same content\n\nAlways use .equals() for objects. For null-safety: Objects.equals(a, b).',
       },
       {
-        id: 4,
-        question: 'Vad innebär Optional och varför används det?',
-        answer: 'Optional är en container som antingen innehåller ett värde eller är tom. Det ersätter null-returvärden och tvingar anroparen att hantera avsaknad av värde explicit med isPresent(), orElse() eller ifPresent().\n\nDet minskar risken för NullPointerException och gör API:er mer expressiva.',
+        id: 104,
+        question: 'What are access modifiers in Java?',
+        answer: '• public — accessible everywhere\n• protected — same package + subclasses\n• (default/package-private) — same package only\n• private — class only\n\nRule of thumb: use the most restrictive modifier that still works. Fields should almost always be private; expose behaviour through methods.',
       },
       {
-        id: 5,
-        question: 'Förklara minnesbehantning och Garbage Collection i JVM.',
-        answer: 'JVM delar heap i Young Generation (Eden + Survivor) och Old Generation. Kortlivade objekt samlas i Young Gen av Minor GC; långlivade objekt befordras till Old Gen. Major/Full GC rensar Old Gen men är dyrare. G1GC och ZGC är moderna low-pause-collectorer.\n\nVanliga problem: minneläckor via ej borttagna lyssnare, eller för stora heap-storleksinställningar.',
+        id: 105,
+        question: 'What is a constructor and what is constructor overloading?',
+        answer: 'A constructor initialises an object when it is created with new. It has the same name as the class and no return type.\n\nConstructor overloading means having multiple constructors with different parameter lists. One constructor can call another with this(...):\n\npublic User(String name) { this(name, 0); }\npublic User(String name, int age) { ... }\n\nIf no constructor is written, Java provides a no-arg default constructor automatically.',
       },
       {
-        id: 19,
-        question: 'Förklara Java Memory Model (JMM) och vad volatile innebär.',
-        answer: 'JMM definierar hur trådar ser varandras skrivningar till minnet. Utan synkronisering kan en tråd se ett inaktuellt cachat värde. volatile garanterar att en variabels värde alltid läses direkt från huvudminnet och att skrivningar omedelbart är synliga för andra trådar.\n\nDet löser visibility-problemet men inte atomicitet – för det används AtomicInteger/AtomicReference eller synchronized-block.',
-        tip: 'Vanlig intervjufråga för senior-nivå.',
+        id: 106,
+        question: 'Explain the four pillars of OOP in Java.',
+        answer: '1. Encapsulation — hide internal state behind private fields and public methods (getters/setters).\n2. Inheritance — a subclass extends a parent class, reusing and overriding behaviour (extends keyword).\n3. Polymorphism — the same method call behaves differently based on the runtime type (method overriding). Also: method overloading (compile-time).\n4. Abstraction — expose only what is necessary; hide implementation details (abstract classes, interfaces).',
       },
       {
-        id: 20,
-        question: 'Vad är skillnaden mellan synchronized, ReentrantLock och StampedLock?',
-        answer: 'synchronized är enklast – JVM hanterar låsning och upplåsning automatiskt, men erbjuder ingen fairness-garanti eller timeout.\n\nReentrantLock (java.util.concurrent) ger mer kontroll: tryLock() med timeout, fairness-läge och explicit lock/unlock.\n\nStampedLock (Java 8+) ger optimistisk läsning utan lås – perfekt för read-heavy scenarier. Undvik over-synkronisering; preferera immutable objekt och trådsäkra datastrukturer när möjligt.',
+        id: 107,
+        question: 'What is the difference between an abstract class and an interface?',
+        answer: 'Abstract class:\n• Can have fields (state), constructors, concrete methods.\n• A class can extend only ONE abstract class.\n• Use when subclasses share implementation.\n\nInterface:\n• No state (only constants). Since Java 8: default and static methods. Since Java 9: private methods.\n• A class can implement MANY interfaces.\n• Use to define a contract (capability).\n\nIf in doubt: prefer interfaces for flexibility.',
       },
       {
-        id: 21,
-        question: 'Förklara CompletableFuture och asynkron programmering i Java.',
-        answer: 'CompletableFuture (Java 8+) möjliggör non-blocking asynkron kod med callbacks. supplyAsync() kör en uppgift i en tråd-pool; thenApply() transformerar resultatet; thenCompose() kedjar asynkrona operationer; exceptionally() hanterar fel.\n\nExempel:\nCompletableFuture.supplyAsync(() -> fetchData()).thenApply(this::transform).join()\n\nI mikrotjänster kan detta användas för att anropa flera tjänster parallellt och kombinera resultaten.',
-        tip: 'Relevant för integrationer mot externa system parallellt.',
+        id: 108,
+        question: 'What is the "final" keyword and where can you use it?',
+        answer: '• final variable — value cannot be reassigned after initialisation (effectively a constant).\n• final method — cannot be overridden by subclasses.\n• final class — cannot be subclassed (e.g., String, Integer).\n\nfinal fields that are also static are compile-time constants: public static final int MAX = 100;',
       },
       {
-        id: 22,
-        question: 'Vad är design patterns och vilka använder du mest i Java?',
-        answer: 'Vanliga mönster i Java-backend:\n• Singleton (Spring beans är singletons per default)\n• Builder (skapar komplexa objekt stegvis – t.ex. Lombok @Builder)\n• Factory (skapar objekt utan att exponera skapandelogik)\n• Strategy (utbytbar algoritm)\n• Observer (event-driven)\n\nI Spring-kontext: Dependency Injection är IoC-mönstret som genomsyrar hela ramverket. Decorator används ofta i Spring Security (filter-kedjor).',
-        tip: 'Lyft ett konkret exempel där du löste ett problem med ett designmönster.',
+        id: 109,
+        question: 'How does String work in Java? What is the String pool?',
+        answer: 'String is immutable — every "modification" creates a new object. Strings created with double quotes (e.g., "hello") are interned: the JVM stores one shared instance in the String pool (inside the heap since Java 7).\n\nString s1 = "hi";    // from pool\nString s2 = "hi";    // same pool object → s1 == s2 is true\nString s3 = new String("hi"); // forced new object\n\nUse StringBuilder for mutable string building in loops.',
       },
       {
-        id: 23,
-        question: 'Vad är skillnaden mellan checked och unchecked exceptions, och hur designar du felhantering?',
-        answer: 'Checked exceptions (t.ex. IOException) måste deklareras eller fångas – de representerar förväntade felfall som anroparen bör hantera.\n\nUnchecked exceptions (RuntimeException och subklasser) behöver inte deklareras och används för programmeringsfel.\n\nModern Java-praxis: kasta specifika unchecked exceptions, använd custom exception-klasser med meningsfulla meddelanden, och fånga exceptions högt upp i stacken (t.ex. i en global @ControllerAdvice i Spring).\n\nLogga alltid stack trace men exponera inte det till klienten.',
+        id: 110,
+        question: 'What is the difference between static and instance members?',
+        answer: 'static members (fields, methods) belong to the class, not to any object. They are shared across all instances and accessible without creating an object: Math.max(), Collections.sort().\n\nInstance members belong to each individual object and require an instance to be accessed.\n\nstatic methods cannot use "this" and cannot call non-static methods directly.',
+      },
+      {
+        id: 111,
+        question: 'What are arrays in Java and what are their limitations?',
+        answer: 'An array is a fixed-size, ordered container of elements of the same type.\nint[] nums = new int[5]; or int[] nums = {1, 2, 3};\n\nLimitations:\n• Fixed size — cannot grow or shrink.\n• Only stores one type.\n• No built-in methods for searching, sorting (need Arrays utility).\n\nFor resizable collections use ArrayList; for primitive-heavy performance-critical code, arrays are still fastest.',
+      },
+      {
+        id: 112,
+        question: 'What is autoboxing and unboxing?',
+        answer: 'Autoboxing is the automatic conversion from a primitive to its wrapper class.\nUnboxing is the reverse.\n\nList<Integer> list = new ArrayList<>();\nlist.add(42); // autoboxing: int → Integer\nint x = list.get(0); // unboxing: Integer → int\n\nCaveat: NullPointerException if you unbox a null wrapper. Also: Integer.valueOf() is cached for -128..127, so == can be misleadingly true in that range.',
+      },
+      {
+        id: 113,
+        question: 'What is the difference between method overloading and overriding?',
+        answer: 'Overloading (compile-time polymorphism): same method name, different parameter types/count in the SAME class. Resolved at compile time.\n\nvoid print(int x) {}\nvoid print(String s) {} // overloaded\n\nOverriding (runtime polymorphism): subclass provides its own implementation of a method declared in the parent. Annotate with @Override. Resolved at runtime based on actual object type.',
+      },
+      {
+        id: 114,
+        question: 'What are enums in Java?',
+        answer: 'Enums are type-safe named constants. They are a special class under the hood.\n\nenum Day { MON, TUE, WED, ... }\n\nEnums can have fields, methods, and constructors:\nenum Planet { EARTH(5.97e24, 6.37e6); final double mass, radius; ... }\n\nUseful with switch expressions. Enums are singletons — each constant is exactly one instance.',
+      },
+      {
+        id: 115,
+        question: 'What does "this" and "super" refer to in Java?',
+        answer: '"this" refers to the current object instance. Uses: disambiguate fields from parameters, call another constructor (this(...)).\n\n"super" refers to the parent class. Uses: call parent constructor (must be first line in constructor), call overridden parent method (super.method()), access hidden parent field.\n\nNeither can be used in static context.',
+      },
+    ],
+  },
+
+  // ─── JAVA INTERMEDIATE ────────────────────────────────────────────────────
+  {
+    id: 'java-intermediate',
+    title: 'Java – Intermediate',
+    color: '#0369a1',
+    icon: '📚',
+    questions: [
+      {
+        id: 121,
+        question: 'What is the Java Collections Framework?',
+        answer: 'A hierarchy of interfaces and classes for storing and manipulating groups of objects.\n\nCore interfaces:\n• Collection → List, Set, Queue\n• Map (separate hierarchy)\n\nKey implementations:\n• ArrayList – dynamic array, fast random access O(1)\n• LinkedList – doubly linked, fast insert/delete at ends O(1)\n• HashSet – O(1) add/contains, unordered\n• TreeSet – O(log n), sorted\n• HashMap – O(1) get/put average\n• TreeMap – O(log n), sorted by key\n• LinkedHashMap – insertion-order HashMap',
+      },
+      {
+        id: 122,
+        question: 'How does HashMap work internally?',
+        answer: 'HashMap uses an array of "buckets." The key\'s hashCode() determines the bucket index (index = hash & (n-1)).\n\nCollisions are handled by a linked list in each bucket. Since Java 8, when a bucket exceeds 8 entries, it converts to a balanced red-black tree (O(log n) instead of O(n)).\n\nDefault load factor is 0.75. When (size / capacity) > 0.75, the map resizes (doubles) and rehashes.\n\nAlways override both hashCode() and equals() together on key objects.',
+      },
+      {
+        id: 123,
+        question: 'What are generics in Java and why are they useful?',
+        answer: 'Generics allow writing type-safe code that works with different types without casting.\n\nList<String> list = new ArrayList<>();\nlist.add("hello");\nString s = list.get(0); // no cast needed\n\nType erasure: generic type info is removed at compile time; at runtime there is no difference between List<String> and List<Integer>.\n\nWildcards: List<?> (unknown), List<? extends Number> (upper bound), List<? super Integer> (lower bound — for producers use extends, for consumers use super: PECS rule).',
+      },
+      {
+        id: 124,
+        question: 'What are lambda expressions and functional interfaces?',
+        answer: 'A lambda is an anonymous function: (params) -> body.\nA functional interface is any interface with exactly one abstract method (annotate with @FunctionalInterface).\n\nBuilt-in functional interfaces (java.util.function):\n• Predicate<T> — T → boolean\n• Function<T,R> — T → R\n• Consumer<T> — T → void\n• Supplier<T> — () → T\n• BiFunction<T,U,R>\n\nLambdas can capture effectively final variables from the enclosing scope.',
+      },
+      {
+        id: 125,
+        question: 'What are Java Streams and how do they work?',
+        answer: 'Streams (Java 8+) provide a declarative pipeline for processing collections.\n\nStages:\n1. Source: collection.stream() or Stream.of(...)\n2. Intermediate (lazy): filter(), map(), flatMap(), sorted(), distinct(), limit()\n3. Terminal (triggers execution): collect(), forEach(), reduce(), count(), findFirst()\n\nList<String> names = employees.stream()\n  .filter(Employee::isActive)\n  .map(Employee::getName)\n  .sorted()\n  .collect(Collectors.toList());\n\nStreams are lazy — nothing runs until a terminal operation is called.',
+      },
+      {
+        id: 126,
+        question: 'What is Optional and how should you use it?',
+        answer: 'Optional<T> is a container that may or may not hold a non-null value. Replaces returning null.\n\nCreating: Optional.of(val), Optional.ofNullable(val), Optional.empty()\nConsuming: isPresent(), get(), orElse(default), orElseGet(supplier), orElseThrow(), ifPresent(consumer), map(), flatMap()\n\nDo NOT use Optional as a field or parameter — it is designed for return types only. Avoid .get() without checking — use orElseThrow() for explicit failure.',
+      },
+      {
+        id: 127,
+        question: 'Explain checked vs unchecked exceptions.',
+        answer: 'Checked exceptions extend Exception (but not RuntimeException). The compiler forces you to catch or declare them with throws. Examples: IOException, SQLException.\n\nUnchecked exceptions extend RuntimeException. No compiler enforcement. Examples: NullPointerException, IllegalArgumentException, ArrayIndexOutOfBoundsException.\n\nModern Java style: prefer unchecked for most application code. Use checked when callers are expected to meaningfully handle the failure (e.g., file not found).\n\nAlways create custom exception classes that carry context.',
+      },
+      {
+        id: 128,
+        question: 'What is the try-with-resources statement?',
+        answer: 'Automatically closes resources that implement AutoCloseable, even if an exception is thrown.\n\ntry (FileInputStream fis = new FileInputStream("file.txt");\n     BufferedReader br = new BufferedReader(new InputStreamReader(fis))) {\n  String line = br.readLine();\n} // fis and br are closed here automatically\n\nResources are closed in reverse order of declaration. Replaces the verbose try/catch/finally boilerplate. Essential for I/O, database connections, and sockets.',
+      },
+      {
+        id: 129,
+        question: 'What is method reference syntax in Java?',
+        answer: 'Method references are shorthand lambdas that point directly to a method.\n\n4 forms:\n• Static: Integer::parseInt  → s -> Integer.parseInt(s)\n• Instance (on type): String::toUpperCase  → s -> s.toUpperCase()\n• Instance (on object): myObj::doWork  → () -> myObj.doWork()\n• Constructor: ArrayList::new  → () -> new ArrayList<>()\n\nThey improve readability when the lambda does nothing but call an existing method.',
+      },
+      {
+        id: 130,
+        question: 'What are the key additions in Java 8?',
+        answer: '• Lambda expressions and functional interfaces\n• Stream API\n• Optional\n• Default and static interface methods\n• New Date/Time API (java.time) — LocalDate, LocalDateTime, ZonedDateTime, Duration, Period\n• CompletableFuture\n• Nashorn JavaScript engine (removed in Java 15)\n• Base64 encoding in standard library\n• Method references\n\nJava 8 is the most impactful Java release since Java 5.',
+      },
+      {
+        id: 131,
+        question: 'What is the Java Date/Time API (java.time)?',
+        answer: 'Introduced in Java 8, replacing the broken java.util.Date and Calendar.\n\n• LocalDate — date without time (2024-01-15)\n• LocalTime — time without date (14:30:00)\n• LocalDateTime — date + time, no timezone\n• ZonedDateTime — date + time + timezone\n• Instant — machine timestamp (epoch milliseconds)\n• Duration — amount of time in seconds/nanos\n• Period — amount of time in years/months/days\n• DateTimeFormatter — thread-safe formatting\n\nAll classes are immutable and thread-safe.',
+      },
+      {
+        id: 132,
+        question: 'How does the Iterator and for-each pattern work?',
+        answer: 'Any class implementing Iterable<T> can be used in a for-each loop. Iterable requires iterator() which returns an Iterator<T> with hasNext() and next().\n\nfor (String s : list) { ... }\n// equivalent to:\nIterator<String> it = list.iterator();\nwhile (it.hasNext()) { String s = it.next(); ... }\n\nUse iterator.remove() to safely remove elements during iteration. ConcurrentModificationException is thrown if you modify a collection structurally during iteration without using the iterator.',
+      },
+      {
+        id: 133,
+        question: 'What is the Comparable vs Comparator interface?',
+        answer: 'Comparable<T> (java.lang): defines the natural ordering of a class. Implement compareTo(T other). Sorts the class itself.\n\nComparator<T> (java.util): defines an external ordering. Implement compare(T o1, T o2). Can sort any class without modifying it.\n\nComparator.comparing(Employee::getSalary).thenComparing(Employee::getName)\n\nUse Comparable for a single, natural order. Use Comparator for multiple or ad-hoc orderings.',
+      },
+      {
+        id: 134,
+        question: 'What are records in Java (Java 14+)?',
+        answer: 'Records are immutable data classes. The compiler generates the constructor, getters, equals(), hashCode(), and toString() automatically.\n\nrecord Point(int x, int y) {}\n\nPoint p = new Point(3, 4);\np.x();  // getter\n\nRecords cannot extend other classes (they implicitly extend Record), fields are final, but they can implement interfaces and have extra methods.\n\nIdeal for DTOs, value objects, and data carriers.',
+      },
+      {
+        id: 135,
+        question: 'What is the var keyword in Java (Java 10+)?',
+        answer: 'var enables local variable type inference — the compiler infers the type from the right-hand side.\n\nvar list = new ArrayList<String>(); // inferred as ArrayList<String>\nvar name = "Alice";                  // inferred as String\n\nvar is NOT a runtime type — it is resolved at compile time. Restrictions: cannot use as field, method parameter, or return type. Cannot be used with null literals or uninitialized variables.\n\nUse where the type is obvious from context; avoid when it harms readability.',
+      },
+    ],
+  },
+
+  // ─── JAVA THREADING ───────────────────────────────────────────────────────
+  {
+    id: 'java-threading',
+    title: 'Java – Threading & Concurrency',
+    color: '#b45309',
+    icon: '🧵',
+    questions: [
+      {
+        id: 141,
+        question: 'What is a thread and how do you create one in Java?',
+        answer: 'A thread is an independent path of execution within a process. All threads share the same heap but have their own stack.\n\n3 ways to create threads:\n1. Extend Thread: class MyThread extends Thread { public void run() {...} }\n2. Implement Runnable: new Thread(() -> {...}).start();\n3. Implement Callable<V> (returns a value, can throw): submit to an ExecutorService → returns a Future<V>\n\nAlways call start() — not run() directly. run() just executes the method on the current thread.',
+      },
+      {
+        id: 142,
+        question: 'What are the thread lifecycle states in Java?',
+        answer: 'A Thread can be in one of these states (Thread.State enum):\n\n1. NEW — created, start() not yet called\n2. RUNNABLE — eligible to run or currently running on CPU\n3. BLOCKED — waiting to acquire a synchronized monitor lock\n4. WAITING — waiting indefinitely (Object.wait(), Thread.join() with no timeout)\n5. TIMED_WAITING — waiting with a timeout (Thread.sleep(ms), wait(ms), join(ms))\n6. TERMINATED — run() has completed\n\nUse Thread.getState() or jstack to inspect live threads.',
+      },
+      {
+        id: 143,
+        question: 'What is race condition and how does synchronization fix it?',
+        answer: 'A race condition occurs when two threads access shared mutable state concurrently and the final result depends on the scheduling order.\n\nExample: two threads incrementing a shared counter — each reads, increments, and writes back, so increments can be lost.\n\nsynchronized fixes it by making the code block mutually exclusive — only one thread can hold the monitor lock at a time:\n\nsynchronized (this) { count++; }\nor: synchronized method:\npublic synchronized void increment() { count++; }',
+      },
+      {
+        id: 144,
+        question: 'What is the Java Memory Model (JMM)?',
+        answer: 'The JMM defines the rules for how threads see each other\'s writes to shared memory.\n\nWithout synchronization, CPUs and JIT may cache values in registers or CPU caches — one thread may not see updates made by another.\n\nThe JMM guarantees visibility through happens-before relationships:\n• Unlocking a monitor happens-before any subsequent lock of that monitor\n• A write to a volatile field happens-before any subsequent read of that field\n• Thread.start() happens-before any action in the started thread\n• All actions in a thread happen-before Thread.join() returns',
+      },
+      {
+        id: 145,
+        question: 'What does volatile do and when is it not enough?',
+        answer: 'volatile guarantees:\n1. Visibility — writes are immediately flushed to main memory; reads always come from main memory.\n2. Prevents instruction reordering around the volatile access.\n\nvolatile is NOT enough for compound operations like check-then-act or read-modify-write:\nprivate volatile int count = 0;\ncount++; // NOT atomic: read, increment, write — three steps\n\nFor atomic compound operations use AtomicInteger, AtomicReference, or synchronized.',
+      },
+      {
+        id: 146,
+        question: 'What is deadlock and how do you prevent it?',
+        answer: 'Deadlock: two or more threads each hold a lock the other needs, so all are blocked forever.\n\nThread A: locks X, waits for Y\nThread B: locks Y, waits for X\n\nPrevention strategies:\n1. Lock ordering — always acquire locks in the same global order\n2. Lock timeout — use ReentrantLock.tryLock(timeout)\n3. Avoid nested locks where possible\n4. Use higher-level concurrency utilities (ConcurrentHashMap, queues) that avoid explicit locking\n\nDetect with jstack — look for "deadlock" in the output.',
+      },
+      {
+        id: 147,
+        question: 'What is ExecutorService and why use it over raw threads?',
+        answer: 'ExecutorService manages a pool of threads and a queue of tasks. Creating threads is expensive; a pool reuses them.\n\nExecutorService ex = Executors.newFixedThreadPool(4);\nFuture<String> f = ex.submit(() -> computeResult());\nex.shutdown();\n\nFactory methods:\n• newFixedThreadPool(n) — n threads\n• newCachedThreadPool() — grows/shrinks as needed\n• newSingleThreadExecutor() — one thread, sequential\n• newScheduledThreadPool(n) — for scheduled/recurring tasks\n\nAlways shutdown() the executor; otherwise the JVM may not exit.',
+      },
+      {
+        id: 148,
+        question: 'What is the difference between Future and CompletableFuture?',
+        answer: 'Future<V>: represents a pending result. You can check isDone() or call get() (blocking). No callback/composition support.\n\nCompletableFuture<V> (Java 8+): a Future you can compose:\n• supplyAsync(() -> fetch())  — run async\n• thenApply(r -> transform(r))  — map result\n• thenCompose(r -> anotherAsync(r))  — flatMap\n• thenCombine(other, (a,b) -> merge(a,b))  — combine two futures\n• exceptionally(ex -> fallback)  — handle errors\n• allOf(f1, f2, f3).join()  — wait for all\n\nNon-blocking and composable — the preferred choice.',
+      },
+      {
+        id: 149,
+        question: 'What are atomic classes and when do you use them?',
+        answer: 'java.util.concurrent.atomic provides lock-free thread-safe variables using CPU-level compare-and-swap (CAS).\n\nKey classes:\n• AtomicInteger / AtomicLong — int/long with atomic ops\n• AtomicBoolean\n• AtomicReference<V> — object reference\n• AtomicStampedReference — reference + version stamp (prevent ABA problem)\n• LongAdder / LongAccumulator — high-contention counters (faster than AtomicLong under heavy write)\n\nAtomicInteger counter = new AtomicInteger(0);\ncounter.incrementAndGet(); // atomic\ncounter.compareAndSet(expected, update); // CAS',
+      },
+      {
+        id: 150,
+        question: 'What is ReentrantLock and how does it differ from synchronized?',
+        answer: 'ReentrantLock is an explicit lock in java.util.concurrent.locks.\n\nAdvantages over synchronized:\n• tryLock() — attempt without blocking; tryLock(timeout, unit) with timeout\n• lockInterruptibly() — can be interrupted while waiting\n• Fairness policy: new ReentrantLock(true) — longest-waiting thread gets the lock first\n• Multiple Condition objects for fine-grained wait/notify\n\nReentrantLock lock = new ReentrantLock();\nlock.lock();\ntry { ... } finally { lock.unlock(); } // always unlock in finally\n\nDownside: must manually unlock — forgetting causes deadlock.',
+      },
+      {
+        id: 151,
+        question: 'What is ReadWriteLock and StampedLock?',
+        answer: 'ReadWriteLock (ReentrantReadWriteLock): multiple concurrent readers OR one exclusive writer. Ideal for read-heavy scenarios.\n\nreadLock().lock() — shared; multiple threads allowed simultaneously\nwriteLock().lock() — exclusive; all other threads block\n\nStampedLock (Java 8+): higher performance. Offers:\n• writeLock() / readLock() — like ReadWriteLock\n• tryOptimisticRead() — read without acquiring a lock; validate() afterward. If not valid, fall back to read lock.\n\nStampedLock is not reentrant — do not call it from code that already holds the lock.',
+      },
+      {
+        id: 152,
+        question: 'What are BlockingQueue implementations and when do you use them?',
+        answer: 'BlockingQueue bridges producer and consumer threads. put() blocks if full; take() blocks if empty.\n\nImplementations:\n• ArrayBlockingQueue — bounded, backed by array, fair/unfair\n• LinkedBlockingQueue — optionally bounded, usually higher throughput\n• PriorityBlockingQueue — unbounded, priority-ordered\n• SynchronousQueue — no storage; each put must pair with a take\n• DelayQueue — elements become available after a delay\n\nUse in the Producer-Consumer pattern to decouple producers from consumers without busy-waiting.',
+      },
+      {
+        id: 153,
+        question: 'What are CountDownLatch, CyclicBarrier, and Semaphore?',
+        answer: 'CountDownLatch: one-shot gate. N threads call countDown(); waiting thread(s) block on await() until count reaches 0.\nTypical use: wait for N services to initialise before starting.\n\nCyclicBarrier: all N threads must call await(); all are released together. Can be reset and reused.\nTypical use: coordinate phases of parallel computation.\n\nSemaphore: controls access to a limited resource. acquire() decrements permits (blocks if 0); release() increments.\nTypical use: connection pool limiting concurrent access to 10 DB connections.',
+      },
+      {
+        id: 154,
+        question: 'What is ThreadLocal and when is it useful?',
+        answer: 'ThreadLocal<T> provides each thread its own independent copy of a variable — threads do not share the value.\n\nprivate static final ThreadLocal<DateFormat> formatter =\n  ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd"));\n\nUse cases:\n• Storing per-request context (user ID, transaction ID) without passing it through every method call\n• Thread-safety for non-thread-safe objects like SimpleDateFormat\n\nCritical: always remove() the value in a finally block when using thread pools — threads are reused and values leak between requests.',
+      },
+      {
+        id: 155,
+        question: 'What is the ForkJoinPool and parallel streams?',
+        answer: 'ForkJoinPool (Java 7+) implements a work-stealing algorithm. Tasks recursively split (fork) into sub-tasks, results are joined. Used internally by parallel streams and CompletableFuture.\n\nRecursiveTask<V> (returns result) or RecursiveAction (no result).\n\nParallel streams: list.parallelStream().filter(...).map(...).collect(...)\nThey use the common ForkJoinPool (size = CPU cores - 1).\n\nUse for CPU-bound work that can be divided. Avoid for I/O-bound tasks — you will exhaust threads. Set pool size carefully with -Djava.util.concurrent.ForkJoinPool.common.parallelism=N.',
+      },
+      {
+        id: 156,
+        question: 'What are virtual threads (Project Loom, Java 21)?',
+        answer: 'Virtual threads are lightweight threads managed by the JVM, not the OS. You can create millions of them without exhausting OS thread limits.\n\nThread.ofVirtual().start(() -> handleRequest());\nor: Executors.newVirtualThreadPerTaskExecutor()\n\nVirtual threads are mounted on carrier (platform) threads. When a virtual thread blocks on I/O, the carrier thread is released to run other virtual threads.\n\nKey benefit: write simple blocking code (no callbacks/reactive) with the throughput of async programming.\nNot suitable for CPU-bound work — use platform threads for that.',
+      },
+      {
+        id: 157,
+        question: 'How do you safely publish objects to other threads?',
+        answer: 'Safe publication ensures other threads see the fully constructed object.\n\nMethods:\n1. Initialise a field in a static initialiser (class loading is thread-safe)\n2. Store in a volatile field\n3. Store in a final field (constructor guarantees visibility)\n4. Use proper synchronization (synchronized block, Lock)\n5. Use a concurrent collection (ConcurrentHashMap, BlockingQueue)\n\nIncorrect publication: storing a reference in a shared variable without synchronization can expose a partially constructed object (fields at default values).',
+      },
+      {
+        id: 158,
+        question: 'What is livelock and starvation?',
+        answer: 'Livelock: threads are not blocked but continuously change state in response to each other without making progress. Like two people in a corridor both stepping aside in the same direction forever.\n\nStarvation: a thread never gets CPU time because other higher-priority threads or unfair locking always win.\n\nPrevention:\n• Use fair locks: new ReentrantLock(true)\n• Avoid holding locks for long periods\n• Do not use Thread.setPriority() to discriminate heavily\n• Use timeouts to break cycles',
+      },
+      {
+        id: 159,
+        question: 'What is the happens-before relationship and why does it matter?',
+        answer: 'happens-before (hb) is a formal guarantee that actions in one thread are visible to another in the correct order.\n\nKey rules:\n• Program order: each action in a thread hb the next action in that thread\n• Monitor lock: unlock hb subsequent lock of same monitor\n• volatile write: hb subsequent volatile read of same field\n• Thread.start(): hb all actions in the started thread\n• All actions hb Thread.join() on that thread\n\nWithout a hb edge, data races are possible and the JVM is free to reorder operations — leading to subtle, hard-to-reproduce bugs.',
+      },
+      {
+        id: 160,
+        question: 'What is structured concurrency (Java 21 preview)?',
+        answer: 'Structured concurrency (JEP 428/453) treats multiple concurrent tasks as a unit — they start together and complete together, simplifying cancellation and error handling.\n\ntry (var scope = StructuredTaskScope.ShutdownOnFailure()) {\n  Future<User> user = scope.fork(() -> fetchUser(id));\n  Future<Order> order = scope.fork(() -> fetchOrder(id));\n  scope.join().throwIfFailed();\n  return new Result(user.resultNow(), order.resultNow());\n}\n\nIf one subtask fails, the scope cancels the others. Compare to CompletableFuture.allOf() but with better error propagation and resource safety.',
+      },
+    ],
+  },
+
+  // ─── HOW JAVA IS BUILT ────────────────────────────────────────────────────
+  {
+    id: 'java-internals',
+    title: 'Java – How Java is Built',
+    color: '#065f46',
+    icon: '🔧',
+    questions: [
+      {
+        id: 166,
+        question: 'How does Java code go from source to execution?',
+        answer: '1. Write source code: Hello.java\n2. javac compiles it to bytecode: Hello.class (platform-neutral binary)\n3. JVM loads the .class file via the ClassLoader\n4. Bytecode Verifier checks the bytecode is safe\n5. Interpreter executes bytecode immediately\n6. JIT (Just-in-Time) compiler monitors hot methods and compiles them to native machine code\n7. Garbage Collector manages memory automatically\n\nThe key insight: compilation is to bytecode (not machine code), and the JVM bridges to native at runtime.',
+      },
+      {
+        id: 167,
+        question: 'What is bytecode and how can you read it?',
+        answer: 'Bytecode is a compact binary instruction set for the JVM — a stack-based virtual machine. Each instruction is 1 byte opcode + optional operands.\n\nExamples: iload_1 (load int from local var 1), iadd (add two ints from stack), invokevirtual (call virtual method), return.\n\nView bytecode:\njavap -c Hello.class\njavap -verbose Hello.class\n\nBytecode is the lingua franca — Kotlin, Scala, Groovy, Clojure all compile to .class files and run on the JVM.',
+      },
+      {
+        id: 168,
+        question: 'Explain the JVM architecture.',
+        answer: 'The JVM has three main subsystems:\n\n1. Class Loader Subsystem — loads, links (verify → prepare → resolve), and initialises class files\n\n2. Runtime Data Areas:\n   • Heap (shared) — objects and arrays\n   • Method Area / Metaspace (shared) — class metadata, static fields, constants\n   • JVM Stack (per-thread) — frames for each method call\n   • PC Register (per-thread) — current instruction pointer\n   • Native Method Stack (per-thread) — for JNI/native methods\n\n3. Execution Engine — interpreter + JIT + GC',
+      },
+      {
+        id: 169,
+        question: 'What are the ClassLoader hierarchy and delegation model?',
+        answer: '3 built-in ClassLoaders (parent-delegation model):\n1. Bootstrap ClassLoader — loads core JDK classes (java.lang.*) from rt.jar / modules. Written in C++.\n2. Platform/Extension ClassLoader — loads java.sql, javax.*, etc.\n3. Application ClassLoader — loads classes from the classpath (your code).\n\nWhen loading a class, a ClassLoader first delegates to its parent. Only if the parent cannot find it does it search itself. This prevents classes from shadowing core JDK classes.\n\nYou can write custom ClassLoaders for hot-reload, encryption, or plugin isolation.',
+      },
+      {
+        id: 170,
+        question: 'How does JIT compilation work in HotSpot?',
+        answer: 'HotSpot JVM uses two JIT compilers:\n• C1 (Client Compiler) — fast compilation, lighter optimisations. Used first.\n• C2 (Server Compiler) — slower compilation, aggressive optimisations (inlining, loop unrolling, escape analysis, SIMD). Used for hot code.\n\nTiered compilation (default since Java 8):\n• Tier 0: interpreter (collects profiling data)\n• Tier 1–3: C1 with increasing optimisation\n• Tier 4: C2 for "hot" methods\n\nA method is considered hot after ~10,000 invocations. The JIT can de-optimise (decompile back) if assumptions break (e.g., a new subclass is loaded).',
+      },
+      {
+        id: 171,
+        question: 'What is the JVM Heap structure and Garbage Collection generations?',
+        answer: 'Heap (default GC layout):\n• Young Generation\n  – Eden: new objects are allocated here\n  – Survivor S0 and S1: objects that survive GC are copied between these\n• Old Generation (Tenured): long-lived objects promoted from Young Gen\n• Metaspace (off-heap): class metadata (replaced PermGen in Java 8)\n\nMinor GC: cleans Young Gen — fast, frequent\nMajor GC: cleans Old Gen — slower\nFull GC: cleans everything — most expensive, causes stop-the-world pauses\n\nMost objects die young — the generational hypothesis behind this design.',
+      },
+      {
+        id: 172,
+        question: 'What GC algorithms are available in the JVM?',
+        answer: '• Serial GC (-XX:+UseSerialGC) — single-threaded, stop-the-world. Good for small heaps.\n• Parallel GC (-XX:+UseParallelGC) — multi-threaded. High throughput, longer pauses. Default before Java 9.\n• G1GC (-XX:+UseG1GC) — divides heap into equal regions. Aims for predictable pause targets. Default since Java 9.\n• ZGC (-XX:+UseZGC) — sub-millisecond pauses, concurrent. Production-ready since Java 15. Scales to TB heaps.\n• Shenandoah — concurrent like ZGC, from Red Hat. Low-pause.\n\nChoose based on: latency requirements, throughput needs, and heap size.',
+      },
+      {
+        id: 173,
+        question: 'What is escape analysis and how does it affect performance?',
+        answer: 'Escape analysis is a JIT optimisation that determines whether an object "escapes" a method or thread.\n\nIf an object does NOT escape (only used locally):\n• Stack allocation: object is allocated on the stack instead of heap → no GC pressure\n• Scalar replacement: object fields are split into local variables — no object allocation at all\n• Lock elision: synchronized on an object that cannot be shared → lock removed entirely\n\nThis is why Java code with lots of small objects can be faster than it looks — the JIT often eliminates the allocations entirely.',
+      },
+      {
+        id: 174,
+        question: 'What is the String pool and how does intern() work?',
+        answer: 'The String pool is a cache in the heap (since Java 7) for string literals. When the compiler encounters "hello", it creates one String object in the pool and reuses it for all identical literals.\n\nString a = "hello";  // from pool\nString b = "hello";  // same object\na == b // true\n\nString.intern() manually adds a string to the pool and returns the canonical instance:\nString c = new String("hello").intern();\na == c // true\n\nInternment saves memory when there are many duplicate strings (e.g., repeated city names). But the pool is not GC\'d as aggressively — avoid over-interning.',
+      },
+      {
+        id: 175,
+        question: 'What is the Java Module System (JPMS, Java 9)?',
+        answer: 'The Java Platform Module System (Project Jigsaw) partitions the JDK itself and allows applications to declare modules.\n\nA module has a module-info.java:\nmodule com.myapp.service {\n  requires java.sql;\n  requires com.myapp.model;\n  exports com.myapp.service.api;\n}\n\nBenefits:\n• Strong encapsulation — internal packages not exposed unless exported\n• Reliable configuration — missing/conflicting modules caught at startup\n• Smaller JRE with jlink — build a minimal runtime containing only required modules\n\nMost large projects still use the classpath for compatibility.',
+      },
+      {
+        id: 176,
+        question: 'What is reflection in Java and what are its costs?',
+        answer: 'Reflection (java.lang.reflect) allows inspecting and manipulating classes, methods, and fields at runtime.\n\nClass<?> clazz = Class.forName("com.example.Foo");\nMethod m = clazz.getDeclaredMethod("bar", int.class);\nm.setAccessible(true);\nm.invoke(instance, 42);\n\nUse cases: frameworks (Spring DI, Jackson, JUnit), serialization, plugins.\n\nCosts:\n• Slower than direct calls (no JIT optimisations, bypasses type-check)\n• Breaks encapsulation (setAccessible)\n• Requires more permissions in modules\n• Hard to detect errors at compile time\n\nMinimise reflection in hot paths.',
+      },
+      {
+        id: 177,
+        question: 'What is a Java agent and how is it used?',
+        answer: 'A Java agent is a JAR that instruments bytecode at load time (or attach to running JVM) using the java.lang.instrument API.\n\nSpecify in manifest: Premain-Class: com.example.MyAgent\nAdd at startup: java -javaagent:agent.jar -jar app.jar\n\nThe agent\'s premain(String args, Instrumentation inst) method can:\n• Retransform classes via bytecode modification (ASM, Javassist, ByteBuddy)\n• Collect profiling data\n• Inject tracing/logging (APM tools like DataDog, NewRelic, OpenTelemetry)\n\nAgents power most Java observability and mocking frameworks (Mockito uses ByteBuddy).',
+      },
+      {
+        id: 178,
+        question: 'What is GraalVM and Ahead-of-Time (AOT) compilation?',
+        answer: 'GraalVM is a polyglot VM that includes:\n• A JIT compiler (written in Java) to replace C2\n• Native Image: AOT compilation of Java apps to standalone native binaries\n\nNative Image (used by Quarkus, Micronaut):\n• Compiles Java to a native executable at build time\n• No JVM at runtime — startup in milliseconds, 5x lower memory\n• Tradeoffs: no dynamic class loading at runtime, reflection must be configured, longer build times\n\nIdeal for CLI tools, serverless functions, and microservices where startup time and memory matter more than peak throughput.',
+      },
+      {
+        id: 179,
+        question: 'What is JVM stack frame structure?',
+        answer: 'Each method invocation pushes a Stack Frame onto the thread\'s JVM stack. The frame contains:\n• Local variable array — index 0 is "this" for instance methods, then parameters, then local vars\n• Operand stack — used to hold intermediate values during bytecode execution\n• Constant pool reference — points to the class\'s constant pool for symbols\n• Return address — where to return after the method completes\n\nWhen the method returns, the frame is popped. StackOverflowError occurs when the stack has no more space (infinite recursion).',
+      },
+      {
+        id: 180,
+        question: 'How does the JVM handle invokedynamic and lambdas internally?',
+        answer: 'invokedynamic (Java 7, indy) allows the JVM to resolve method calls at runtime via a bootstrap method — making it flexible for dynamic languages and lambdas.\n\nWhen the compiler sees a lambda, instead of generating an anonymous inner class, it emits invokedynamic. The bootstrap method (LambdaMetafactory) generates a class at first invocation and caches it.\n\nThis is faster and more memory-efficient than pre-Java 8 anonymous inner classes: no .class file is generated at compile time; the JVM creates an optimised implementation on first call and JIT-compiles it like any method.',
+      },
+    ],
+  },
+
+  // ─── JAVA ADVANCED ────────────────────────────────────────────────────────
+  {
+    id: 'java-advanced',
+    title: 'Java – Advanced',
+    color: '#4c1d95',
+    icon: '🚀',
+    questions: [
+      {
+        id: 186,
+        question: 'What is the difference between HashMap and ConcurrentHashMap?',
+        answer: 'HashMap is not thread-safe — concurrent writes can corrupt internal state (lost updates, infinite loops in Java 7).\n\nConcurrentHashMap:\n• Java 7: divides array into 16 segments, each independently locked\n• Java 8+: uses CAS (Compare-and-Swap) for lock-free reads; only bins/tree nodes are locked on write\n• Provides atomic operations: putIfAbsent(), computeIfAbsent(), merge()\n• Never locks the whole map — readers never block\n\ngetOrDefault, forEach, reduce, search run on snapshots without locking.\n\nDo NOT use Collections.synchronizedMap(map) for high concurrency — it locks the whole map.',
+      },
+      {
+        id: 187,
+        question: 'Explain Java generics type erasure and its implications.',
+        answer: 'At compile time, generic type parameters are erased and replaced with Object (or the upper bound). The bytecode contains no generic type information.\n\nImplications:\n• Cannot create generic arrays: new T[] is illegal\n• Cannot use instanceof with parameterized type: x instanceof List<String> is illegal\n• Cannot call T.class\n• Casts are inserted by compiler where needed\n• Overloading on generic type alone is impossible (same erasure)\n\nWorkaround: pass a Class<T> token at runtime (reified generics via supertype token).\nSome frameworks use TypeToken/ParameterizedType to recover type info from generic superclasses.',
+      },
+      {
+        id: 188,
+        question: 'What are sealed classes and pattern matching (Java 17+)?',
+        answer: 'Sealed classes restrict which classes can extend/implement them:\n\npublic sealed interface Shape permits Circle, Rectangle, Triangle {}\n\nEvery permitted subtype must be final, sealed, or non-sealed.\n\nCombined with pattern matching in switch (Java 21):\nswitch (shape) {\n  case Circle c -> Math.PI * c.radius() * c.radius();\n  case Rectangle r -> r.width() * r.height();\n  case Triangle t -> triangleArea(t);\n}\n\nThe compiler verifies exhaustiveness — no default needed. Enables algebraic data types (like Rust enums or Haskell ADTs) in Java.',
+      },
+      {
+        id: 189,
+        question: 'What is CompletableFuture composition in depth?',
+        answer: 'CompletableFuture chains:\n• thenApply(fn) — sync transform, same thread\n• thenApplyAsync(fn) — transform on ForkJoinPool.commonPool()\n• thenApplyAsync(fn, executor) — transform on custom executor\n• thenCompose(fn → CF) — flatMap: fn returns a new CF, flattens it\n• thenCombine(other, (a,b) → r) — zip two CFs\n• thenAccept(consumer) — consume result, returns CF<Void>\n• whenComplete((result, ex) -> ...) — run always\n• handle((result, ex) -> ...) — like whenComplete but transforms\n• allOf(cf1,cf2,...) — wait for all, returns CF<Void>\n• anyOf(cf1,cf2,...) — first to complete wins',
+      },
+      {
+        id: 190,
+        question: 'What are design patterns and which are most used in Java?',
+        answer: 'Creational:\n• Singleton — one instance (Spring beans)\n• Builder — step-by-step construction (Lombok @Builder, StringBuilder)\n• Factory Method / Abstract Factory — decouple creation from use\n\nStructural:\n• Proxy — wrap object to add behaviour (Spring AOP, dynamic proxies)\n• Decorator — wrap to extend functionality (Java I/O streams)\n• Adapter — interface translation\n\nBehavioural:\n• Strategy — swap algorithms at runtime\n• Observer — event listeners\n• Command — encapsulate an operation\n• Template Method — skeleton algorithm with overridable steps\n\nIn Spring: IoC/DI = Inversion of Control; AOP = Proxy + Decorator.',
+      },
+      {
+        id: 191,
+        question: 'How does Spring dependency injection work under the hood?',
+        answer: 'Spring creates an ApplicationContext that manages beans (objects).\n\nAt startup:\n1. Scans @Component, @Service, @Repository, @Controller, @Bean\n2. Builds a dependency graph\n3. Instantiates beans in order, injecting dependencies via constructor, setter, or field injection\n4. Wraps beans in CGLIB proxies for AOP (@Transactional, @Cacheable, etc.)\n\nInjection styles:\n• Constructor injection (preferred — immutable, testable)\n• Setter injection\n• @Autowired field injection (avoid — hides dependencies, hard to test)\n\nBeans are singletons by default (@Scope("prototype") for new instance per request).',
+      },
+      {
+        id: 192,
+        question: 'What is Spring AOP and how are proxies created?',
+        answer: 'Aspect-Oriented Programming lets you add cross-cutting concerns (logging, transactions, security) without modifying business code.\n\n@Aspect class with advice:\n@Around("@annotation(Transactional)") → wraps method call\n@Before, @After, @AfterReturning, @AfterThrowing\n\nProxy types:\n• JDK dynamic proxy — if bean implements an interface\n• CGLIB proxy — if no interface (subclasses the class)\n\nLimitation: AOP only intercepts calls through the proxy. A method calling another method on the same object bypasses AOP — use self-injection or AspectJ weaving to fix.',
+      },
+      {
+        id: 193,
+        question: 'What is @Transactional and how does it work?',
+        answer: '@Transactional on a method means Spring wraps it in a transaction:\n1. Begins a transaction before the method\n2. Commits if method returns normally\n3. Rolls back if an unchecked exception (RuntimeException) is thrown\n\nKey attributes:\n• propagation (REQUIRED, REQUIRES_NEW, SUPPORTS, etc.)\n• isolation (READ_COMMITTED, REPEATABLE_READ, SERIALIZABLE)\n• rollbackFor — also rollback for checked exceptions\n• readOnly = true — hints to DB optimise the query\n\nCaveat: calls to @Transactional methods within the same class bypass the proxy — transaction does NOT start.',
+      },
+      {
+        id: 194,
+        question: 'What is Java NIO and how does it differ from IO?',
+        answer: 'Classic java.io (Streams): blocking, byte-at-a-time, thread-per-connection model.\n\njava.nio (New I/O, Java 4):\n• Buffer — fixed-size container; data is read/written in blocks\n• Channel — bidirectional, can be non-blocking\n• Selector — one thread monitors multiple channels for events (readable, writable) — event-driven I/O\n• Non-blocking mode: channel.configureBlocking(false)\n\nNIO2 (Java 7, java.nio.file): Path, Files, WatchService, AsynchronousFileChannel with callbacks.\n\nUse NIO for high-connection servers. For application code, prefer the higher-level abstractions (Spring WebFlux, Netty, Vertx) that wrap NIO.',
+      },
+      {
+        id: 195,
+        question: 'What are annotations and how do you create a custom annotation?',
+        answer: '@interface declares an annotation:\n\n@Retention(RetentionPolicy.RUNTIME)  // visible at runtime via reflection\n@Target(ElementType.METHOD)           // applicable to methods\npublic @interface Timed {\n  String value() default "";\n  TimeUnit unit() default TimeUnit.MILLISECONDS;\n}\n\nRetention policies:\n• SOURCE — discarded after compilation (e.g., @Override)\n• CLASS — in bytecode, not at runtime (default)\n• RUNTIME — available via reflection (most framework annotations)\n\nProcess annotations at runtime with reflection or at compile time with an Annotation Processor (AbstractProcessor, used by Lombok, MapStruct).',
+      },
+      {
+        id: 196,
+        question: 'What is serialization in Java and what are its pitfalls?',
+        answer: 'Java serialization converts an object graph to bytes (ObjectOutputStream) and back (ObjectInputStream). A class must implement Serializable.\n\nPitfalls:\n• Security: deserializing untrusted data can execute arbitrary code (gadget chains) — serious CVEs\n• Versioning: adding/removing fields breaks compatibility unless serialVersionUID is managed\n• Performance: slow and verbose\n• Serializes everything: transient keyword excludes fields\n\nModern alternatives: JSON (Jackson, Gson), Protocol Buffers, Avro, Kryo.\n\nNever deserialize data from untrusted sources using Java native serialization.',
+      },
+      {
+        id: 197,
+        question: 'What are dynamic proxies in Java?',
+        answer: 'java.lang.reflect.Proxy creates an implementation of one or more interfaces at runtime.\n\nInvocationHandler handler = (proxy, method, args) -> {\n  System.out.println("Before " + method.getName());\n  return method.invoke(realObject, args);\n};\nMyService proxy = (MyService) Proxy.newProxyInstance(\n  MyService.class.getClassLoader(),\n  new Class[]{MyService.class},\n  handler\n);\n\nEvery method call on proxy goes through the InvocationHandler.\n\nUsed by: Spring AOP (for interface-based beans), Mockito, Hibernate lazy proxies, remote service stubs (RMI, JAX-RS clients).',
+      },
+      {
+        id: 198,
+        question: 'What is the difference between String, StringBuilder, and StringBuffer?',
+        answer: 'String: immutable. Every "modification" creates a new object. Thread-safe (immutability). Use for literals and values that do not change.\n\nStringBuilder: mutable, NOT thread-safe. Best performance for single-threaded string building. Use in loops.\n\nStringBuffer: mutable, thread-safe (all methods synchronized). Slower than StringBuilder. Rarely needed — prefer StringBuilder + external synchronization if needed.\n\nThe Java compiler automatically replaces String concatenation in simple expressions with StringBuilder. But inside loops, write StringBuilder explicitly to avoid creating many intermediate String objects.',
+      },
+      {
+        id: 199,
+        question: 'What are text blocks (Java 13+) and pattern matching instanceof (Java 16+)?',
+        answer: 'Text blocks — multiline string literals with automatic indent stripping:\nString json = """\n    {\n      "name": "Alice",\n      "age": 30\n    }\n    """;\n\nPattern matching for instanceof — eliminates cast:\n// Old:\nif (obj instanceof String) { String s = (String) obj; ... }\n// New:\nif (obj instanceof String s) { s.toUpperCase(); } // s is in scope\n\nAlso in switch expressions (Java 14+):\nint result = switch (day) {\n  case MON, FRI -> 6;\n  case WED -> 4;\n  default -> 5;\n};',
+      },
+      {
+        id: 200,
+        question: 'How does garbage collection impact application latency and how do you tune it?',
+        answer: 'GC stop-the-world pauses freeze the application. For latency-sensitive apps, minimize pause duration.\n\nKey flags:\n• -Xms/-Xmx: initial/max heap\n• -XX:+UseG1GC / -XX:+UseZGC\n• -XX:MaxGCPauseMillis=200: G1 pause target\n• -XX:G1HeapRegionSize=n: G1 region size\n• -Xlog:gc*: GC log\n• -XX:+PrintGCDetails (legacy)\n\nDiagnosis tools:\n• GCEasy, GCViewer — analyze GC logs\n• Java Flight Recorder (JFR) — low-overhead profiler built into JDK\n• jstat -gcutil <pid> 1000 — live GC stats\n\nGeneral: avoid large object allocations on hot paths, minimize long-lived objects in Old Gen.',
+      },
+    ],
+  },
+
+  // ─── JAVA EXPERT ──────────────────────────────────────────────────────────
+  {
+    id: 'java-expert',
+    title: 'Java – Expert Level',
+    color: '#7f1d1d',
+    icon: '🏆',
+    questions: [
+      {
+        id: 206,
+        question: 'What is JVM ergonomics and how does the JVM auto-tune itself?',
+        answer: 'JVM ergonomics automatically selects defaults based on the host machine:\n• GC algorithm: G1GC on machines with ≥ 2 CPUs and ≥ 1792MB heap\n• Heap size: -Xmx defaults to ~25% of physical RAM\n• GC thread count: scales with CPU count\n\nIn containers (Docker/Kubernetes), the JVM historically read host RAM, not cgroup limits → OOMKilled. Fixed in Java 8u191+ with UseContainerSupport=true (default).\n\nAlways set -XX:MaxRAMPercentage=75.0 in containers and verify with: java -XshowSettings:all -version',
+      },
+      {
+        id: 207,
+        question: 'What is class data sharing (CDS) and how does it improve startup?',
+        answer: 'AppCDS (Application Class Data Sharing) dumps a shared archive of loaded class metadata to a file. On subsequent JVM starts, multiple JVM processes map the archive into read-only shared memory — skipping parsing and linking for those classes.\n\nSteps:\n1. java -XX:DumpLoadedClassList=classes.lst -jar app.jar\n2. java -Xshare:dump -XX:SharedClassListFile=classes.lst -XX:SharedArchiveFile=app.jsa ...\n3. java -Xshare:on -XX:SharedArchiveFile=app.jsa -jar app.jar\n\nJava 13+: Dynamic CDS archives are created automatically on first run. Startup improvements of 20-50% are typical for framework-heavy apps.',
+      },
+      {
+        id: 208,
+        question: 'What is JVM memory leak detection and how do you diagnose it?',
+        answer: 'A memory leak in Java: objects accumulate in memory because live references prevent GC from collecting them.\n\nCommon causes:\n• Static collections holding references indefinitely\n• ThreadLocal not removed in thread pools\n• Listeners/callbacks not de-registered\n• Caches without eviction policies\n\nDiagnosis steps:\n1. Monitor heap with jstat -gcutil <pid> 5000 — growing Old Gen after Full GC indicates a leak\n2. Capture heap dump: jmap -dump:format=b,file=heap.hprof <pid> or -XX:+HeapDumpOnOutOfMemoryError\n3. Analyze with Eclipse MAT or IntelliJ heap analyser — look for Dominator Tree, Retained Heap\n4. Find the GC root path for the retained objects',
+      },
+      {
+        id: 209,
+        question: 'What is Java Flight Recorder (JFR) and how do you use it?',
+        answer: 'JFR is a low-overhead (~1%) continuous profiling framework built into the JDK (open-sourced in Java 11).\n\nCaptures: CPU profiling, GC events, thread activities, lock contention, I/O, class loading, exceptions, JIT compilation.\n\nUsage:\n• Start with JVM flags: -XX:StartFlightRecording=duration=60s,filename=app.jfr\n• On running JVM: jcmd <pid> JFR.start duration=60s filename=app.jfr\n• Analyse in JDK Mission Control (JMC)\n\nJFR is the first tool to reach for in production performance investigations — always-on, minimal overhead.',
+      },
+      {
+        id: 210,
+        question: 'What is the ABA problem in lock-free programming and how is it solved?',
+        answer: 'The ABA problem: a CAS reads value A, another thread changes A→B→A, the CAS succeeds even though the state has changed underneath.\n\nExample: lock-free stack — node removed and re-added; CAS sees same pointer but stack is different.\n\nSolution: tag the reference with a version stamp:\nAtomicStampedReference<Node> head = new AtomicStampedReference<>(node, 0);\nhead.compareAndSet(expected, newVal, stampBefore, stampBefore + 1);\n\nThe stamp changes on every update, so A→B→A has a different stamp each time. AtomicMarkableReference is a boolean-tagged variant for simpler "marked for deletion" use cases.',
+      },
+      {
+        id: 211,
+        question: 'What is false sharing in CPU caches and how do you prevent it?',
+        answer: 'A CPU cache line is typically 64 bytes. When two threads write to different variables that happen to be in the same cache line, each write invalidates the other core\'s cache line — causing excessive cache misses.\n\nExample: two AtomicLong counters adjacent in memory.\n\nPrevention:\n1. Pad fields to 64 bytes: add 7 long padding fields around the hot field\n2. @Contended annotation (JDK internal, -XX:-RestrictContended required before Java 9): JVM pads the field automatically\n3. Use LongAdder for high-contention counters — internally uses Striped64 with per-thread cells that are cache-line padded\n\nFalse sharing can cause 10x slowdown in tight concurrent loops.',
+      },
+      {
+        id: 212,
+        question: 'What is off-heap memory and when would you use it?',
+        answer: 'Off-heap memory is allocated outside the JVM heap — not managed by GC.\n\nAPIs:\n• ByteBuffer.allocateDirect(n) — direct buffer, backed by native memory\n• sun.misc.Unsafe.allocateMemory(n) — raw native malloc (use with extreme caution)\n• Java 22+: MemorySegment (Foreign Memory API, stable) — safe, structured off-heap\n\nUse cases:\n• Large caches (GBs of data without GC pauses)\n• I/O buffers (zero-copy between JVM and OS)\n• Shared memory between JVM processes\n• Interop with native libraries via JNI/FFI\n\nRisk: memory leaks — you must manually free allocations (ByteBuffer via Cleaner, MemorySegment via SegmentScope).',
+      },
+      {
+        id: 213,
+        question: 'What is benchmarking with JMH and why is it necessary?',
+        answer: 'JMH (Java Microbenchmark Harness) is the standard tool for measuring Java performance. Naive microbenchmarks are wrong because:\n• JVM warms up (JIT compilation) changes performance\n• Dead code elimination removes your test code\n• GC pauses skew results\n• CPU frequency scaling, branch predictor effects\n\nJMH handles all of this:\n@Benchmark\n@Warmup(iterations = 5)\n@Measurement(iterations = 10)\n@BenchmarkMode(Mode.AverageTime)\npublic int myBenchmark(MyState state) { return state.list.size(); }\n\nAlways benchmark before optimising. Never trust "intuition" about Java performance.',
+      },
+      {
+        id: 214,
+        question: 'How do you implement a thread-safe singleton in Java?',
+        answer: '1. Enum singleton (best — JVM guarantees exactly one instance, serialization-safe):\nenum Singleton { INSTANCE; void doWork() {...} }\n\n2. Initialization-on-demand holder (lazy, thread-safe, no synchronization overhead):\npublic class Singleton {\n  private static class Holder { static final Singleton INSTANCE = new Singleton(); }\n  public static Singleton get() { return Holder.INSTANCE; }\n}\n\n3. Double-checked locking (verbose but common):\nprivate static volatile Singleton instance;\npublic static Singleton get() {\n  if (instance == null) synchronized (Singleton.class) {\n    if (instance == null) instance = new Singleton();\n  }\n  return instance;\n}\nNote: volatile is mandatory — without it, partially constructed objects can be observed.',
+      },
+      {
+        id: 215,
+        question: 'What are common JVM flags for production tuning?',
+        answer: 'Memory:\n-Xms=4g -Xmx=4g (set equal to avoid resizing)\n-XX:MaxMetaspaceSize=512m\n-XX:MaxRAMPercentage=75 (containers)\n\nGC:\n-XX:+UseG1GC -XX:MaxGCPauseMillis=200\n-XX:+UseZGC (Java 15+ for latency-sensitive)\n-Xlog:gc*:file=gc.log:time,uptime:filecount=5,filesize=20m\n\nDiagnostics:\n-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heap.hprof\n-XX:+ExitOnOutOfMemoryError (fail fast in containers)\n-XX:StartFlightRecording=maxsize=128m,maxage=1d\n\nJIT:\n-XX:+PrintCompilation (development)\n-XX:CompileThreshold=10000',
+      },
+      {
+        id: 216,
+        question: 'What is the Reactor pattern and reactive programming in Java?',
+        answer: 'Reactive programming models data as asynchronous streams that can be observed and transformed.\n\nReactive Streams spec defines: Publisher, Subscriber, Subscription, Processor.\n\nProject Reactor (Spring WebFlux):\n• Mono<T> — 0 or 1 element\n• Flux<T> — 0 to N elements\n\nFlux.fromIterable(users)\n  .filter(User::isActive)\n  .flatMap(u -> fetchOrdersAsync(u.getId()))\n  .collectList()\n  .subscribe(result -> ...);\n\nBackpressure: subscriber signals demand to publisher — prevents buffer overflow.\n\nBest for: high-concurrency I/O-bound services. Poor fit for CPU-bound or simple CRUD (adds complexity without benefit).',
+      },
+      {
+        id: 217,
+        question: 'What is the difference between optimistic and pessimistic locking in databases from a Java perspective?',
+        answer: 'Pessimistic locking: acquire a database lock immediately.\n@Lock(LockModeType.PESSIMISTIC_WRITE) → SELECT ... FOR UPDATE\nBlocks concurrent readers/writers until your transaction commits.\nUse when conflicts are frequent.\n\nOptimistic locking: no DB lock; detect conflict at commit time.\n@Version private Long version; on entity.\nHibernate adds WHERE version=? to UPDATE — if 0 rows updated, throws OptimisticLockException.\nUse when conflicts are rare (most reads, few writes).\n\nRetry with optimistic:\ncatch (OptimisticLockException e) { retry the transaction; }\n\nOptimistic is default in most web apps — better throughput, no DB locks held across slow operations.',
+      },
+      {
+        id: 218,
+        question: 'What is Java security and the principle of least privilege in the JVM?',
+        answer: 'Key concepts:\n• SecurityManager (removed in Java 17): controlled access to file, network, reflection. Replaced by OS-level isolation.\n• Code Signing: JARs can be signed; policy files grant permissions based on signer.\n• Module system (Java 9+): strong encapsulation prevents access to internal JDK APIs.\n• --add-opens: explicitly opens a module package for reflection (necessary for some frameworks).\n\nBest practices:\n• Keep dependencies minimal and up-to-date (CVE scanning: Dependabot, Snyk)\n• Never deserialize untrusted data\n• Use prepared statements (prevent SQL injection)\n• Sanitize inputs, encode outputs (prevent XSS)\n• Run containers as non-root, use seccomp profiles',
+      },
+      {
+        id: 219,
+        question: 'What are the SOLID principles and how do they apply to Java?',
+        answer: 'S — Single Responsibility: one class = one reason to change. Split big service classes.\nO — Open/Closed: open for extension, closed for modification. Use interfaces + strategy pattern.\nL — Liskov Substitution: subclasses must be usable wherever the parent is used. Do not override methods to throw exceptions.\nI — Interface Segregation: prefer many small specific interfaces over one fat interface. Clients should not depend on methods they do not use.\nD — Dependency Inversion: depend on abstractions, not concretions. Inject interfaces, not implementations (enabled by Spring DI).\n\nIn practice: SOLID guides you toward loosely coupled, testable code. Do not apply it dogmatically — 5 classes where 1 works is worse.',
+      },
+      {
+        id: 220,
+        question: 'How do you write high-performance Java code?',
+        answer: 'Profile first — never optimise without data (JFR, async-profiler).\n\nObject allocation:\n• Avoid unnecessary allocations on hot paths (object pooling, value types in Project Valhalla)\n• Reuse buffers, arrays\n• Avoid boxing primitives in collections — use Eclipse Collections or int[]\n\nCache-friendly data:\n• Prefer arrays over linked structures (cache line locality)\n• Process data sequentially\n\nCollections:\n• Size collections at construction to avoid rehashing\n• EnumSet/EnumMap for enum-keyed maps\n\nI/O:\n• Buffer all I/O (BufferedReader, BufferedOutputStream)\n• Use NIO for high-connection servers\n\nJIT-friendly:\n• Keep methods small so the JIT can inline them\n• Avoid megamorphic call sites (> 2 different subtypes at same call site)',
       },
     ],
   },
