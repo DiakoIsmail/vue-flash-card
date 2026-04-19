@@ -1,0 +1,18 @@
+<template>
+  <RouterView />
+</template>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0f172a;
+  color: #f1f5f9;
+  min-height: 100vh;
+}
+</style>
