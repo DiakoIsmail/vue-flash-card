@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git rm *)",
+      "Bash(npm run *)",
+      "WebSearch"
+    ],
+    "additionalDirectories": [
+      "/Users/diakoismail/Desktop/code maps/vue-flashcar/node_modules/.cache/gh-pages"
+    ]
+  }
+}
